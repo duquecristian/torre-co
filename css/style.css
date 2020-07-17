@@ -1,0 +1,42 @@
+body {
+    background: #010101;
+}
+
+main {
+    text-align: center;
+}
+
+.slogan {
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+.features {
+    padding: 1em;
+    position: relative;
+}
+
+.feature-title {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+#filter {
+    height: 3em;
+    width: 26em;
+}
+
+.page-header{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.card-header{
+    background-color: #cddc39 !important;
+}
+.card-body img{
+    max-height: 180px;
+    max-width: 180px;
+}
