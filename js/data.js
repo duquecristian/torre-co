@@ -12,7 +12,9 @@ $(function () {
         hide: {
             effect: "explode",
             duration: 1000
-        }
+        },
+        width: 500,
+        height: 500
     });
     $("#job-dialog").dialog({
         autoOpen: false,
@@ -23,7 +25,9 @@ $(function () {
         hide: {
             effect: "explode",
             duration: 1000
-        }
+        },
+        width: 500,
+        height: 500
     });
 });
 
@@ -142,14 +146,59 @@ function opportunities(data, status) {
 
 function bio(id) {
     $.get("https://cors-anywhere.herokuapp.com/https://bio.torre.co/api/bios/" + id, function (data, status) {
-        alert("Data: " + data + "\nStatus: " + status);
+        var person = data.person;
+        var strengthsJson = data.strengths;
+        var interestsJson = data.interests;
+        var experiencesJson = data.experiences;
+        var languagesJson = data.languages;
+        var strengths = "", interests = "", experiences = "", languages = "";
+        for (j = 0; j < strengthsJson.length; j++) {
+            if (j > 0)
+                strengths += " | ";
+            strengths += strengthsJson[j].name;
+        }
+        for (j = 0; j < interestsJson.length; j++) {
+            if (j > 0)
+                interests += " | ";
+            interests += interestsJson[j].name;
+        }
+        for (j = 0; j < experiencesJson.length; j++) {
+            if (j > 0)
+                experiences += " | ";
+            experiences += experiencesJson[j].name;
+        }
+        for (j = 0; j < languagesJson.length; j++) {
+            if (j > 0)
+                languages += " | ";
+            languages += languagesJson[j].language;
+        }
+        var output =
+            '                        <div class="card-body">' +
+            '    <div class= "card flex-md-row mb-4 shadow-sm h-md-250">' +
+            '<div class="card-body d-flex flex-column align-items-start">' +
+            '    <img src="' + person.picture + '" class="bd-placeholder-img card-img-right flex-auto d-none d-lg-block" />' +
+            '    <strong class="d-inline-block mb-2 text-primary">' + person.location.name + '</strong>' +
+            '    <h3 class="mb-0">' + person.name + '</h3>' +
+            '<p class="cadr-text mb-auto">' +
+            person.professionalHeadline + '<br/>' +
+            '<strong>Strengths:</strong> ' + strengths + '<br/>' +
+            '<strong>Interests:</strong> ' + interests + '<br/>' +
+            '<strong>Experiences:</strong> ' + experiences + '<br/>' +
+            '<strong>Languages:</strong> ' + languages + '<br/>' +
+            '        </p>' +
+            '<strong><a href="https://bio.torre.co/' + person.publicId + '">View Professional Genome</a></strong>' +
+            '    </div>' +
+            '</div>' +
+            '</div>';
+        $("div.worker-info").html(jQuery.parseHTML(output));
+        $(".worker-loading").hide();
     });
     $("#worker-dialog").dialog("open");
 }
 
 function job(id) {
     $.get("https://cors-anywhere.herokuapp.com/https://torre.co/api/opportunities/" + id, function (data, status) {
-        alert("Data: " + data + "\nStatus: " + status);
+        //alert("Data: " + data + "\nStatus: " + status);
     });
     $("#job-dialog").dialog("open");
 }
