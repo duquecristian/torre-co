@@ -3,4 +3,3 @@ A new interface to find people interested in jobs and positions offered by recru
 All this through http://torre.co 's API
 
 - jQuery
-- Mustache.js

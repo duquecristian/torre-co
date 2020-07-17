@@ -198,7 +198,54 @@ function bio(id) {
 
 function job(id) {
     $.get("https://cors-anywhere.herokuapp.com/https://torre.co/api/opportunities/" + id, function (data, status) {
-        //alert("Data: " + data + "\nStatus: " + status);
+        var owner = data.owner;
+        var strengthsJson = data.strengths;
+        var detailsJson = data.details;
+        var languagesJson = data.languages;
+        var strengths = "", details = "", organization = "", languages = "", remote;
+        for (j = 0; j < strengthsJson.length; j++) {
+            if (j > 0)
+                strengths += " | ";
+            strengths += strengthsJson[j].name;
+        }
+        for (j = 0; j < detailsJson.length; j++) {
+            if (j > 0)
+                details += " | ";
+            details += detailsJson[j].content;
+        }
+        if (data.place.remote === "true")
+            remote = "Yes";
+        else
+            remote = "No";
+        for (j = 0; j < languagesJson.length; j++) {
+            if (j > 0)
+                languages += " | ";
+            languages += languagesJson[j].language.name;
+        }
+        for (k = 0; k < data.organizations.length; k++) {
+            if (k > 0)
+                organization += " | ";
+            organization += data.organizations[k].name;
+        }
+        var output =
+            '                        <div class="card-body">' +
+            '    <div class= "card flex-md-row mb-4 shadow-sm h-md-250">' +
+            '<div class="card-body d-flex flex-column align-items-start">' +
+            '    <img src="' + owner.picture + '" class="bd-placeholder-img card-img-right flex-auto d-none d-lg-block" />' +
+            '    <strong class="d-inline-block mb-2 text-primary">Remote:' + remote + '</strong>' +
+            '    <h3 class="mb-0">' + data.objective + '</h3>' +
+            '<p class="cadr-text mb-auto">' +
+            organization + '<br/>' +
+            details + '<br/>' +
+            '<strong>Strengths:</strong> ' + strengths + '<br/>' +
+            '<strong>Languages:</strong> ' + languages + '<br/>' +
+            '        </p>' +
+            '<strong><a href="https://torre.co/es/jobs/' + id + '">View All Specs</a></strong>' +
+            '    </div>' +
+            '</div>' +
+            '</div>';
+        $("div.job-info").html(jQuery.parseHTML(output));
+        $(".job-loading").hide();
     });
     $("#job-dialog").dialog("open");
 }
