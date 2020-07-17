@@ -1,5 +1,32 @@
 var keywords;
 var requestCounter = 0;
+var noResultsPeople = false;
+
+$(function () {
+    $("#worker-dialog").dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 1000
+        },
+        hide: {
+            effect: "explode",
+            duration: 1000
+        }
+    });
+    $("#job-dialog").dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 1000
+        },
+        hide: {
+            effect: "explode",
+            duration: 1000
+        }
+    });
+});
+
 $.ajaxSetup({
     headers: {
         'Content-Type': 'application/json',
@@ -15,16 +42,35 @@ function fetchData() {
 }
 
 function find(url, callback) {
-    $.post(url,
-        JSON.stringify({ term: keywords }),
-        callback);
+    if (callback === people)
+        $.post(url,
+            JSON.stringify({ "name": { "term": keywords } }),
+            callback);
+    else
+        $.post(url,
+            //{ "skill": { "term": keywords } },
+            JSON.stringify({ "and": [{ "skill": { "term": keywords, "experience": "potential-to-develop" } }] }),
+            callback);
+}
+
+function retry(url, callback) {
+    if (callback === people)
+        $.post(url,
+            JSON.stringify({ "skill": { "term": keywords, "experience": "potential-to-develop" } }),
+            callback);
 }
 
 function people(data, status) {
     if (callNumber === requestCounter) {
+        $("div.people-container").html("");
         var results = data.results;
         var records = results.length;
         var output = "";
+        if (records === 0) {
+            retry("https://search.torre.co/people/_search/?offset=0&size=10&aggregate=false", people);
+            return;
+        }
+
         for (i = 0; i < records; i++) {
             output +=
                 '                        <div class="card-body">' +
@@ -35,7 +81,7 @@ function people(data, status) {
                 '<p class="cadr-text mb-auto">' +
                 results[i].professionalHeadline +
                 '        </p>' +
-                '<a href="#' + results[i].username + '">View more info</a>' +
+                '<a href="javascript:bio(\'' + results[i].username + '\');">View more info</a>' +
                 '    </div>' +
                 '<img src="' + results[i].picture + '" class="bd-placeholder-img card-img-right flex-auto d-none d-lg-block" />' +
                 '</div>' +
@@ -48,6 +94,7 @@ function people(data, status) {
 
 function opportunities(data, status) {
     if (callNumber === requestCounter) {
+        $("div.opportunities-container").html("");
         var results = data.results;
         var records = results.length;
         var output = "";
@@ -82,7 +129,7 @@ function opportunities(data, status) {
                 '<p class="cadr-text mb-auto">' +
                 results[i].objective + '<br/>' + skills +
                 '        </p>' +
-                '<a href="#' + results[i].id + '">View more info</a>' +
+                '<a href="javascript:job(\'' + results[i].id + '\');">View more info</a>' +
                 '    </div>' +
                 '<img src="' + picture + '" class="bd-placeholder-img card-img-right flex-auto d-none d-lg-block" />' +
                 '</div>' +
@@ -93,8 +140,16 @@ function opportunities(data, status) {
     $(".loading").hide();
 }
 
-function bio() {
-    $.get("https://cors-anywhere.herokuapp.com/https://bio.torre.co/api/bios/" + keywords, function (data, status) {
+function bio(id) {
+    $.get("https://cors-anywhere.herokuapp.com/https://bio.torre.co/api/bios/" + id, function (data, status) {
         alert("Data: " + data + "\nStatus: " + status);
     });
+    $("#worker-dialog").dialog("open");
+}
+
+function job(id) {
+    $.get("https://cors-anywhere.herokuapp.com/https://torre.co/api/opportunities/" + id, function (data, status) {
+        alert("Data: " + data + "\nStatus: " + status);
+    });
+    $("#job-dialog").dialog("open");
 }

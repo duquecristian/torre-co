@@ -9,6 +9,9 @@
     <script src="js/mustache.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/data.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 
 <body>
@@ -21,12 +24,12 @@
         <header class="page-header header container-fluid">
             <img src="images/Torre_icon.png" />
             <br />
-            <label class="slogan">Looking for job? or filling a vacancy?</label>
+            <label class="slogan">Looking for a job? or filling a vacancy?</label>
         </header>
 
         <input type="text" id="filter" placeholder="keywords" style="font-size: 1.2em;" />
         <br />
-        <button class="btn btn-outline-secondary btn-lg mb-4" id="search" onclick="fetchData()">Find</button>
+        <button class="btn btn-outline-secondary btn-lg mb-4 mt-4" id="search" onclick="fetchData()">Find</button>
 
         <div class="loading features">
             <img src="images/Loading.gif" width="100px" style="display:none;" />
@@ -57,6 +60,12 @@
         <footer>
             <a href="#">Back to top</a>
         </footer>
+        <div id="worker-dialog" title="Worker Information">
+            <img src="images/Loading.gif" width="100px" class="worker-loading" />
+        </div>
+        <div id="job-dialog" title="Job Information">
+            <img src="images/Loading.gif" width="100px" class="job-loading" />
+        </div>
     </main>
 </body>
 
